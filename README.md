@@ -1,5 +1,3 @@
-"prefixes" -> "key"
-
 # Concourse Hashicorp Consul Resource
 [Concourse CI](http://concourse.ci) resource for watching and reacting to changes of a single key in Hashicorp [Consul](https://www.consul.io/).
 
