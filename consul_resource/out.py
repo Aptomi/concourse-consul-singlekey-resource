@@ -15,11 +15,12 @@
 # limitations under the License.
 
 import json
+import os
 import sys
 import consulate
 import common
 
-def out(instream):
+def out(basedir, instream):
     input = json.load(instream)
 
     # create consul_instance
@@ -35,11 +36,13 @@ def out(instream):
     if "value" in input['params']:
         value = input['params']['value']
     elif "value_file" in input['params']:
-        with open(input['params']['value_file'], 'r') as file:
+        with open(os.path.join(basedir, input['params']['value_file']), 'r') as file:
             value = file.read()
     else:
         common.msg("[out] consul singlekey resource expected either 'value' or 'value_file' specified")
         exit(1)
+
+    value = value.strip()
 
     common.msg("[out] consul singlekey resource setting {0} = {1}".format(key, value))
     consul_instance.kv[key] = value
@@ -47,7 +50,7 @@ def out(instream):
     return {'version': {'value': value}}
 
 def main():
-    print(json.dumps(out(sys.stdin)))
+    print(json.dumps(out(sys.argv[1], sys.stdin)))
 
 if __name__ == '__main__':
     main()
