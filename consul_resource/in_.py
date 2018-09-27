@@ -31,7 +31,7 @@ def in_(destdir, instream):
 
     # put on a file system
     value = version['value']
-    common.msg("[in] consul singlekey resource, writing value '{0}' to {1}".format(value, destdir))
+    common.msg("[in] consul singlekey resource, getting value '{0}' and storing in directory {1}".format(value, destdir))
     with safe_open(os.path.join(destdir, "value"), 'w') as f:
         f.write(value.encode("utf-8"))
 
