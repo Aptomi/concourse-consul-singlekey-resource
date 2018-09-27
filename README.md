@@ -1,10 +1,12 @@
 # Concourse Hashicorp Consul Resource
-[Concourse CI](http://concourse.ci) resource for watching and reacting to changes of a single key in Hashicorp [Consul](https://www.consul.io/).
+[Concourse CI](http://concourse.ci) resource for watching changes of a single key in Hashicorp [Consul](https://www.consul.io/).
 
-A typical use case for this would be:
+A typical use case for fetching new values would be:
 * create a resource instance that watches value of a given key in Consul
 * when the value changes, generate a new resource version and run it through the pipeline
 * retrieved key value is available to Concourse tasks
+
+This resource also supports writing values to Consul.
  
 Docker image: https://hub.docker.com/r/aptomi/concourse-consul-singlekey-resource
 
@@ -32,8 +34,13 @@ resources:
     key: aaa/bbb/ccc/ddd
 ```
 
-## `get`: Download the latest version
+## `get`: Retrieve the latest value
 No parameters.
+
+## `put`: Store value
+One of those parameters should be specified:
+- `value` - string value to be stored in a given Consul key
+- `value_file` - read value from this file and store it in a given Consul key
 
 ## Development
 To build the docker image for the resource:

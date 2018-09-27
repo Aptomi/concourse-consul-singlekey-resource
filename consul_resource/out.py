@@ -14,11 +14,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+import sys
+import consulate
 import common
 
+def out(instream):
+    input = json.load(instream)
+
+    # create consul_instance
+    consul_instance = consulate.Consul(host=input['source']['host'], port=input['source'].get('port', 443), scheme=input['source'].get('scheme', 'https'), token=input['source']['token'])
+
+    # see which key we need to monitor
+    key = input['source']['key']
+    if not key or len(key) <= 0:
+        common.msg("[out] consul singlekey resource expected a non-empty key name")
+        exit(1)
+
+    value = None
+    if "value" in input['params']:
+        value = input['params']['value']
+    elif "value_file" in input['params']:
+        with open(input['params']['value_file'], 'r') as file:
+            value = file.read()
+    else:
+        common.msg("[out] consul singlekey resource expected either 'value' or 'value_file' specified")
+        exit(1)
+
+    common.msg("[out] consul singlekey resource setting {0} = {1}".format(key, value))
+    consul_instance.kv[key] = value
+
+    return {'version': {'value': value}}
+
 def main():
-    common.msg("Out for consul singlekey resource does not exist")
-    exit(1)
+    print(json.dumps(out(sys.stdin)))
 
 if __name__ == '__main__':
     main()
